@@ -1,0 +1,18 @@
+name: flutter_faded_list
+description: This package helps you display a list of your widgets with the blurred image in the first item.
+version: 0.0.1
+repository: https://github.com/esmaeil-ahmadipour/flutter_faded_list
+homepage: https://github.com/esmaeil-ahmadipour/flutter_faded_list
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+flutter:
