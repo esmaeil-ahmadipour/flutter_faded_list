@@ -11,7 +11,7 @@ To use this plugin, add flutter_faded_list in your `pubspec.yaml`
 
 ```
 dependencies:
-  flutter_faded_list: ^0.0.2
+  flutter_faded_list: ^0.0.3
 ```
 
 Or install automatically using this command

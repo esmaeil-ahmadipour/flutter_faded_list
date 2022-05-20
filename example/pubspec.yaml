@@ -1,6 +1,6 @@
 name: flutter_faded_list_example
 description: This example of flutter_faded_list  package  . This Package ,  helps you display a list of your widgets with the blurred image in the first item.
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

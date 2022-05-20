@@ -10,28 +10,50 @@ class FadedHorizontalList extends StatefulWidget {
       required this.children,
       required this.imageWidget,
       this.borderRadius = 16.0,
-      this.border,
       this.isDisabledGlow = false,
       this.scrollPhysics = const ScrollPhysics(),
       required this.blankSpaceWidth,
       this.headerWidget,
       required this.bodyColor,
-      this.headerColor})
+      this.headerColor,
+      this.minOpacityOnImage = 0.2})
       : assert(!(blankSpaceWidth < 0),
-            'You set the negative value in blankSpaceWidth at FadedHeaderWidget class! , If you do not need blankSpaceWidth, just set the value to zero.'),
+            '\nYou set the negative value in blankSpaceWidth at FadedHeaderWidget class! ,\nIf you do not need blankSpaceWidth, just set the value to zero.'),
         assert(!(borderRadius < 0),
-            'You set the negative value in borderRadius at FadedHeaderWidget class! , If you do not need borderRadius, just set the value to zero.'),
+            '\nYou set the negative value in borderRadius at FadedHeaderWidget class! ,\nIf you do not need borderRadius, just set the value to zero.'),
+        assert(!(minOpacityOnImage > 1.0 || minOpacityOnImage < 0.0),
+            '\nYou set the minOpacityOnImage value out of range at FadedHeaderWidget class!.\nminOpacityOnImage value must between 0.0 and 1.0 .'),
         super(key: key);
+
+  /// [children] , this widget list used as content and will be scrolled .
   final List<Widget> children;
+
+  /// [imageWidget] , this widget used as background (like image , image network , cachedImage , svg & ETC)
   final Widget imageWidget;
+
+  /// [borderRadius] , this property used for borderRadius of header-widget and main widget (FadedHorizontalList) .
   final double borderRadius;
-  final Border? border;
+
+  /// [bodyColor] , this property used for background of scrollable-widget .
   final Color bodyColor;
+
+  /// [headerColor] , this property used for background of header widget .
   final Color? headerColor;
+
+  /// [isDisabledGlow] , if this property set on true,then hidden glow by scrolling .
   final bool isDisabledGlow;
+
+  /// [scrollPhysics] , this property used for change scroll mode to bounced like iOS or default in android & etc .
   final ScrollPhysics scrollPhysics;
+
+  /// [blankSpaceWidth] , this property used for blank space on first item of content widget list .
   final double blankSpaceWidth;
+
+  /// [headerWidget] , this property used for some time user want to used customized header-widget  .
   final Widget? headerWidget;
+
+  /// [minOpacityOnImage] , this property must set on double number between 0.0 and  1.0 , this property used for minimum opacity on [imageWidget]   .
+  final double minOpacityOnImage;
 
   @override
   State<FadedHorizontalList> createState() => _FadedHorizontalListState();
@@ -45,7 +67,10 @@ class _FadedHorizontalListState extends State<FadedHorizontalList> {
 
   @override
   void initState() {
-    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+    dynamic dynamicInstance = SchedulerBinding.instance;
+
+    /// cover difference null-safety on SchedulerBinding in flutter3 and older versions.
+    dynamicInstance.addPostFrameCallback((timeStamp) {
       setState(() {
         /// set height value for using in image_widget.
         height = _globalKey.currentContext!.size!.height;
@@ -73,78 +98,78 @@ class _FadedHorizontalListState extends State<FadedHorizontalList> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollEndNotification>(
-        child: ClipRRect(
-      /// this widget handle color and main-size and rounded border  .
-      borderRadius: BorderRadius.circular(widget.borderRadius),
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.bodyColor,
-        ),
-        key: _globalKey,
-        child: Stack(
-          // mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              /// this widget , handle image , gradiant on image , image fade  .
-              height: height,
-              foregroundDecoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: AlignmentDirectional.centerStart,
-                      end: AlignmentDirectional.centerEnd,
-                      colors: [Colors.transparent, widget.bodyColor])),
-              child: Opacity(
-                child: widget.imageWidget,
-                opacity: (_scrollPosition < widget.blankSpaceWidth
-                    ? ((widget.blankSpaceWidth - _scrollPosition) /
-                                widget.blankSpaceWidth) <=
-                            0.2
-                        ? 0.2
-                        : ((widget.blankSpaceWidth - _scrollPosition) /
-                            widget.blankSpaceWidth)
-                    : 0.2),
+      child: ClipRRect(
+        /// this widget handle color and main-size and rounded border  .
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.bodyColor,
+          ),
+          key: _globalKey,
+          child: Stack(
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                /// this widget , handle image , gradiant on image , image fade  .
+                height: height,
+                foregroundDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: AlignmentDirectional.centerStart,
+                        end: AlignmentDirectional.centerEnd,
+                        colors: [Colors.transparent, widget.bodyColor])),
+                child: Opacity(
+                  child: widget.imageWidget,
+                  opacity: (_scrollPosition < widget.blankSpaceWidth
+                      ? ((widget.blankSpaceWidth - _scrollPosition) /
+                                  widget.blankSpaceWidth) <=
+                              widget.minOpacityOnImage
+                          ? widget.minOpacityOnImage
+                          : ((widget.blankSpaceWidth - _scrollPosition) /
+                              widget.blankSpaceWidth)
+                      : widget.minOpacityOnImage),
+                ),
               ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (widget.headerWidget != null)
-                  Container(
-                    /// this widget , handle header-toolbar , and style around of widget .
-                    decoration: BoxDecoration(
-                      color: widget.headerColor ??
-                          widget.bodyColor.withOpacity(0.5),
-                      border: widget.border,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(widget.borderRadius),
-                          topRight: Radius.circular(widget.borderRadius)),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.headerWidget != null)
+                    Container(
+                      /// this widget , handle header-toolbar , and style around of widget .
+                      decoration: BoxDecoration(
+                        color: widget.headerColor ??
+                            widget.bodyColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(widget.borderRadius),
+                            topRight: Radius.circular(widget.borderRadius)),
+                      ),
+                      child: widget.headerWidget,
                     ),
-                    child: widget.headerWidget,
-                  ),
-                ScrollConfiguration(
-                  /// this widget , handle scroll and scroll-notification , disable scroll-glow , scroll-physics , scroll-direction .
-                  behavior: widget.isDisabledGlow
-                      ? DisableGlow()
-                      : const ScrollBehavior(),
-                  child: SingleChildScrollView(
-                    physics: widget.scrollPhysics,
-                    controller: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.only(
-                          start: widget.blankSpaceWidth),
-                      child: Row(
-                        /// this widget , handle children widgets .
-                        children: widget.children,
+                  ScrollConfiguration(
+                    /// this widget , handle scroll and scroll-notification , disable scroll-glow , scroll-physics , scroll-direction .
+                    behavior: widget.isDisabledGlow
+                        ? DisableGlow()
+                        : const ScrollBehavior(),
+                    child: SingleChildScrollView(
+                      physics: widget.scrollPhysics,
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.only(
+                            start: widget.blankSpaceWidth),
+                        child: Row(
+                          /// this widget , handle children widgets .
+                          children: widget.children,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }
 
@@ -168,9 +193,9 @@ class FadedHeaderWidget extends StatelessWidget {
     this.verticalPadding = 8.0,
     this.horizontalPadding = 16.0,
   })  : assert(!(verticalPadding < 0 || horizontalPadding < 0),
-            'You set the negative value in verticalPadding or horizontalPadding at FadedHeaderWidget class! , If you do not need padding, just set the value to zero.'),
+            '\nYou set the negative value in verticalPadding or horizontalPadding at FadedHeaderWidget class! ,\n If you do not need padding, just set the value to zero.'),
         assert(!(title == null && buttonTitle == null && buttonIcon == null),
-            'all required values in FadedHeaderWidget class is null , at the least mode just set the title value.'),
+            '\nall required values in FadedHeaderWidget class is null ,\n at the least mode just set the title value.'),
         super(key: key);
 
   /// [title] , by this parameter ,  can  set title on the [FadedHeaderWidget] , for example, as a Text("New Category") widget .
