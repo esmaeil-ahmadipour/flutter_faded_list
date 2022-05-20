@@ -45,7 +45,7 @@ class _FadedHorizontalListState extends State<FadedHorizontalList> {
 
   @override
   void initState() {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       setState(() {
         /// set height value for using in image_widget.
         height = _globalKey.currentContext!.size!.height;

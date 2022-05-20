@@ -11,7 +11,7 @@ To use this plugin, add flutter_faded_list in your `pubspec.yaml`
 
 ```
 dependencies:
-  flutter_faded_list: ^0.0.1
+  flutter_faded_list: ^0.0.2
 ```
 
 Or install automatically using this command
@@ -32,15 +32,19 @@ import 'package:flutter_faded_list/flutter_faded_list.dart';
                   imageWidget: Image.network("https://i.picsum.photos/id/478/536/354.jpg?hmac=adxYyHX8WcCfHkk07quT2s92fbC7vY2QttaeBztwxgI"),
                   children: [
                     for (var i = 0; i < 10; ++i)
-                      const Text("  Hello World!  ")
+                      const Padding(
+                      padding: const EdgeInsets.all(70.0),
+                      child:Text("  Hello World!  ")),
                   ],
                 ),
 ...
 ```
 
 ### And bonus widget 🎉
+Use this widget in FadedHorizontalList for headerWidget property .
 
 ```dart
 import 'package:flutter_faded_list/flutter_faded_list.dart';
 
+FadedHeaderWidget(title: Text("Sample Header Title")),
 ...

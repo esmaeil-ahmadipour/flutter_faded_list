@@ -83,7 +83,9 @@ class FadedSampleItem extends StatelessWidget {
 
 class DirectionWidget extends StatelessWidget {
   const DirectionWidget({
-    Key? key, required this.child, required this.textDirection,
+    Key? key,
+    required this.child,
+    required this.textDirection,
   }) : super(key: key);
   final Widget child;
   final TextDirection textDirection;
@@ -91,13 +93,11 @@ class DirectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: textDirection,
-      child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child:child
-      ),
+      child: Padding(padding: const EdgeInsets.all(8.0), child: child),
     );
   }
 }
 
 enum HotDrink { coffee, tea }
+
 enum LanguageType { rtl, ltr }
