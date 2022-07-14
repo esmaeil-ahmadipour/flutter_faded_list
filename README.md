@@ -1,9 +1,9 @@
-![Screenshot](https://github.com/esmaeil-ahmadipour/flutter_faded_list/blob/master/img/banner.png?raw=true "Flutter Faded List Banner")
+![Screenshot](https://github.com/esmaeil-ahmadipour/esmaeil-ahmadipour/blob/main/upload/packages/flutter_faded_list/banner.png?raw=true "Flutter Faded List Banner")
 # Flutter Faded List plugin
 
 This package helps you display a list of your widgets with the blurred image in the first item.
 
-![Screenshot](https://github.com/esmaeil-ahmadipour/flutter_faded_list/blob/master/img/flutter_faded_list.gif?raw=true "Flutter Faded List Demo")
+![Screenshot](https://github.com/esmaeil-ahmadipour/esmaeil-ahmadipour/blob/main/upload/packages/flutter_faded_list/preview.gif?raw=true "Flutter Faded List Demo")
 
 ### Installation
 
@@ -11,7 +11,7 @@ To use this plugin, add flutter_faded_list in your `pubspec.yaml`
 
 ```
 dependencies:
-  flutter_faded_list: ^0.0.3
+  flutter_faded_list: ^0.0.4
 ```
 
 Or install automatically using this command

@@ -6,3 +6,6 @@
 
 ## 0.0.3
 * add property minOpacityOnImage
+
+## 0.0.4
+* Increase performance by removing setState .

@@ -61,20 +61,17 @@ class FadedHorizontalList extends StatefulWidget {
 
 class _FadedHorizontalListState extends State<FadedHorizontalList> {
   late ScrollController _scrollController;
-  double height = 0.0;
   final GlobalKey _globalKey = GlobalKey();
-  double _scrollPosition = 0.0;
-
+  ValueNotifier<double> height = ValueNotifier<double>(0.0);
+  ValueNotifier<double> scrollPosition = ValueNotifier<double>(0.0);
   @override
   void initState() {
     dynamic dynamicInstance = SchedulerBinding.instance;
 
     /// cover difference null-safety on SchedulerBinding in flutter3 and older versions.
     dynamicInstance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        /// set height value for using in image_widget.
-        height = _globalKey.currentContext!.size!.height;
-      });
+      /// set height value for using in image_widget.
+      height.value = _globalKey.currentContext!.size!.height;
     });
 
     /// set _scrollController value for using in singleChildScrollView.
@@ -87,11 +84,9 @@ class _FadedHorizontalListState extends State<FadedHorizontalList> {
   _scrollListener() {
     // print("_scrollPosition:$_scrollPosition");
     if (_scrollController.position.pixels <= widget.blankSpaceWidth) {
-      setState(() {
-        _scrollPosition = _scrollController.position.pixels < 0
-            ? 0
-            : _scrollController.position.pixels;
-      });
+      scrollPosition.value = _scrollController.position.pixels < 0
+          ? 0
+          : _scrollController.position.pixels;
     }
   }
 
@@ -109,26 +104,34 @@ class _FadedHorizontalListState extends State<FadedHorizontalList> {
           child: Stack(
             // mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                /// this widget , handle image , gradiant on image , image fade  .
-                height: height,
-                foregroundDecoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: AlignmentDirectional.centerStart,
-                        end: AlignmentDirectional.centerEnd,
-                        colors: [Colors.transparent, widget.bodyColor])),
-                child: Opacity(
-                  child: widget.imageWidget,
-                  opacity: (_scrollPosition < widget.blankSpaceWidth
-                      ? ((widget.blankSpaceWidth - _scrollPosition) /
-                                  widget.blankSpaceWidth) <=
-                              widget.minOpacityOnImage
-                          ? widget.minOpacityOnImage
-                          : ((widget.blankSpaceWidth - _scrollPosition) /
-                              widget.blankSpaceWidth)
-                      : widget.minOpacityOnImage),
-                ),
-              ),
+              ValueListenableBuilder<double>(
+                  valueListenable: height,
+                  builder: (context, double data, child) {
+                    return Container(
+                      /// this widget , handle image , gradiant on image , image fade  .
+                      height: data,
+                      foregroundDecoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: AlignmentDirectional.centerStart,
+                              end: AlignmentDirectional.centerEnd,
+                              colors: [Colors.transparent, widget.bodyColor])),
+                      child: ValueListenableBuilder<double>(
+                          valueListenable: scrollPosition,
+                          builder: (context, double data, child) {
+                            return Opacity(
+                              child: widget.imageWidget,
+                              opacity: (data < widget.blankSpaceWidth
+                                  ? ((widget.blankSpaceWidth - data) /
+                                              widget.blankSpaceWidth) <=
+                                          widget.minOpacityOnImage
+                                      ? widget.minOpacityOnImage
+                                      : ((widget.blankSpaceWidth - data) /
+                                          widget.blankSpaceWidth)
+                                  : widget.minOpacityOnImage),
+                            );
+                          }),
+                    );
+                  }),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -242,7 +245,7 @@ class FadedHeaderWidget extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(height: 0),
+        const Divider(height: 0.0),
       ],
     );
   }
